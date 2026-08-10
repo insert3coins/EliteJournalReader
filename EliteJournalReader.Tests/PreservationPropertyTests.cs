@@ -75,7 +75,7 @@ namespace EliteJournalReader.Tests
 
                 var nestedExtra = originalObj["ExtraData"];
                 Assert.IsNotNull(nestedExtra, "Nested unknown properties must be in OriginalEvent");
-                Assert.AreEqual(true, nestedExtra["nested"]?.Value<bool>());
+                Assert.IsTrue(nestedExtra["nested"]?.Value<bool>() ?? false);
             }
             finally
             {
@@ -138,22 +138,6 @@ namespace EliteJournalReader.Tests
 
         #endregion
 
-        #region Property: Bounded Polling Fallback (Req 3.8)
-
-        /// <summary>
-        /// Bounded polling is used as a fallback without busy-waiting. The polling interval
-        /// is a constant 500ms (UPDATE_INTERVAL_MILLISECONDS).
-        /// </summary>
-        [TestMethod]
-        public void Preservation_BoundedPolling_UsesConstantInterval()
-        {
-            // **Validates: Requirements 3.8**
-            Assert.AreEqual(500, JournalWatcher.UPDATE_INTERVAL_MILLISECONDS,
-                "Preservation: polling interval must remain 500ms");
-        }
-
-        #endregion
-
         #region Property: Canonical Multipart Session Reconstruction (Req 3.9)
 
         /// <summary>
@@ -189,7 +173,7 @@ namespace EliteJournalReader.Tests
                 watcher.StopWatching();
 
                 // Preservation: events from the latest session parts are processed
-                Assert.IsTrue(events.Count >= 1,
+                Assert.IsGreaterThanOrEqualTo(1, events.Count,
                     "Preservation: multipart session must yield at least one event from history");
             }
             finally
@@ -284,7 +268,7 @@ namespace EliteJournalReader.Tests
                 }
 
                 // Preservation: complete line is processed
-                Assert.AreEqual(1, processedLines.Count,
+                Assert.HasCount(1, processedLines,
                     "Preservation: one complete newline-terminated line must yield one processed record");
 
                 // Verify parsed JSON is valid

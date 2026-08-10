@@ -140,7 +140,7 @@ namespace EliteJournalReader.Tests
             var selector = new JournalSessionSelector();
             var result = selector.SelectSessionFiles(files, _ => DateTime.MinValue);
 
-            Assert.AreEqual(3, result.Count);
+            Assert.HasCount(3, result);
             Assert.AreEqual(@"C:\Journals\Journal.20260407173045.01.log", result[0]);
             Assert.AreEqual(@"C:\Journals\Journal.20260407173045.02.log", result[1]);
             Assert.AreEqual(@"C:\Journals\Journal.20260407173045.03.log", result[2]);
@@ -192,7 +192,7 @@ namespace EliteJournalReader.Tests
             var result = selector.SelectSessionFiles(files, GetMisleadingWriteTime);
 
             // Must select the greatest session by parsed name, not by metadata
-            Assert.AreEqual(1, result.Count);
+            Assert.HasCount(1, result);
             Assert.AreEqual(@"C:\Journals\Journal.20260407170000.01.log", result[0]);
         }
 
@@ -210,11 +210,11 @@ namespace EliteJournalReader.Tests
             var selector = new JournalSessionSelector();
             var result = selector.SelectSessionFiles(files, _ => DateTime.MinValue);
 
-            Assert.AreEqual(3, result.Count);
+            Assert.HasCount(3, result);
             // Numeric order: 1, 2, 10 (not 1, 10, 2 which would be lexical)
-            Assert.IsTrue(result[0].Contains(".01."));
-            Assert.IsTrue(result[1].Contains(".02."));
-            Assert.IsTrue(result[2].Contains(".10."));
+            Assert.Contains(".01.", result[0]);
+            Assert.Contains(".02.", result[1]);
+            Assert.Contains(".10.", result[2]);
         }
 
         [TestMethod]
@@ -252,8 +252,8 @@ namespace EliteJournalReader.Tests
             var result = selector.SelectSessionFiles(files, _ => DateTime.MaxValue);
 
             // Canonical files take precedence — legacy file is excluded
-            Assert.AreEqual(1, result.Count);
-            Assert.IsTrue(result[0].Contains("20260407173045"));
+            Assert.HasCount(1, result);
+            Assert.Contains("20260407173045", result[0]);
         }
 
         [TestMethod]
@@ -261,7 +261,7 @@ namespace EliteJournalReader.Tests
         {
             var selector = new JournalSessionSelector();
             var result = selector.SelectSessionFiles(Array.Empty<string>(), _ => DateTime.MinValue);
-            Assert.AreEqual(0, result.Count);
+            Assert.IsEmpty(result);
         }
 
         [TestMethod]
@@ -391,13 +391,13 @@ namespace EliteJournalReader.Tests
                     f => File.GetLastWriteTimeUtc(f));
 
                 // Only the newer session is selected
-                Assert.AreEqual(3, result.Count);
+                Assert.HasCount(3, result);
                 Assert.IsTrue(result.All(f => Path.GetFileName(f).Contains("20260407120000")));
 
                 // Ordered numerically: 01, 02, 10
-                Assert.IsTrue(Path.GetFileName(result[0]).Contains(".01."));
-                Assert.IsTrue(Path.GetFileName(result[1]).Contains(".02."));
-                Assert.IsTrue(Path.GetFileName(result[2]).Contains(".10."));
+                Assert.Contains(".01.", Path.GetFileName(result[0]));
+                Assert.Contains(".02.", Path.GetFileName(result[1]));
+                Assert.Contains(".10.", Path.GetFileName(result[2]));
             }
             finally
             {
@@ -440,7 +440,7 @@ namespace EliteJournalReader.Tests
 
                 // Only events from the newest session (2 files) should be processed
                 // Old session's 3 files should NOT be included
-                Assert.IsTrue(events.Count >= 1, "Should process at least one event from the newest session");
+                Assert.IsGreaterThanOrEqualTo(1, events.Count, "Should process at least one event from the newest session");
                 // Verify we got events from both parts of the new session (Fileheader + LoadGame)
                 Assert.IsTrue(events.Contains("Fileheader") || events.Contains("LoadGame"),
                     "Should have events from the newest session");

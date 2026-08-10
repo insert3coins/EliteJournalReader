@@ -154,7 +154,7 @@ namespace EliteJournalReader.Tests
             await watcher.StopWatchingAsync();
 
             // At least one event was dispatched on the final start
-            Assert.IsTrue(receivedEvents.Count >= 1,
+            Assert.IsGreaterThanOrEqualTo(1, receivedEvents.Count,
                 "After rapid start/stop cycles, final start should still dispatch events");
         }
 
@@ -297,7 +297,7 @@ namespace EliteJournalReader.Tests
 
             // Wait — should NOT dispatch yet
             await Task.Delay(700);
-            Assert.AreEqual(0, receivedEvents.Count, "Partial data must not dispatch");
+            Assert.IsEmpty(receivedEvents, "Partial data must not dispatch");
 
             // Append rest + newline
             using (var fs = new FileStream(journalPath, FileMode.Append, FileAccess.Write, FileShare.ReadWrite))
@@ -310,7 +310,7 @@ namespace EliteJournalReader.Tests
             // Wait for dispatch with bounded timeout
             bool dispatched = await Task.WhenAny(tcs.Task, Task.Delay(5000)) == tcs.Task;
             Assert.IsTrue(dispatched, "Complete line must dispatch within bounded time");
-            Assert.AreEqual(1, receivedEvents.Count, "Exactly one event dispatched");
+            Assert.HasCount(1, receivedEvents, "Exactly one event dispatched");
 
             await watcher.StopWatchingAsync();
         }
@@ -344,7 +344,7 @@ namespace EliteJournalReader.Tests
 
             // Bounded polling interval is 500ms — should detect within a few seconds
             await WaitForCondition(() => receivedEvents.Count >= 2, 5000);
-            Assert.IsTrue(receivedEvents.Count >= 2,
+            Assert.IsGreaterThanOrEqualTo(2, receivedEvents.Count,
                 "Bounded polling must detect appended data without busy-waiting");
 
             await watcher.StopWatchingAsync();
@@ -422,7 +422,7 @@ namespace EliteJournalReader.Tests
                 "Appended record should be dispatched without reset");
 
             // No duplicates — Sol was not re-dispatched
-            Assert.AreEqual(2, receivedSystems.Count,
+            Assert.HasCount(2, receivedSystems,
                 "No duplicate dispatch from file growth");
 
             await watcher.StopWatchingAsync();
@@ -481,7 +481,7 @@ namespace EliteJournalReader.Tests
             Assert.IsTrue(allArrived, "All 3 events should be consumed through JournalWatcher");
 
             // Verify events arrived in order
-            Assert.AreEqual(3, receivedEvents.Count);
+            Assert.HasCount(3, receivedEvents);
             Assert.AreEqual("Fileheader", receivedEvents[0]);
             Assert.AreEqual("LoadGame", receivedEvents[1]);
             Assert.AreEqual("FSDJump", receivedEvents[2]);

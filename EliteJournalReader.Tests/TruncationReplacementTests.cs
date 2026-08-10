@@ -74,7 +74,7 @@ namespace EliteJournalReader.Tests
 
             // Wait for initial records to be processed
             await WaitForCondition(() => receivedEvents.Count >= 2, timeout: 3000);
-            Assert.AreEqual(2, receivedEvents.Count, "Should process both initial records");
+            Assert.HasCount(2, receivedEvents, "Should process both initial records");
             Assert.AreEqual("Sol", receivedEvents[0]);
             Assert.AreEqual("Alpha Centauri", receivedEvents[1]);
 
@@ -224,7 +224,7 @@ namespace EliteJournalReader.Tests
             await WaitForCondition(() => receivedSystems.Count >= 3, timeout: 3000);
 
             // Preservation: each record dispatched exactly once, in order
-            Assert.AreEqual(3, receivedSystems.Count, "Each appended record dispatches exactly once");
+            Assert.HasCount(3, receivedSystems, "Each appended record dispatches exactly once");
             Assert.AreEqual("Sol", receivedSystems[0]);
             Assert.AreEqual("AlphaCentauri", receivedSystems[1]);
             Assert.AreEqual("Barnard", receivedSystems[2]);
@@ -277,7 +277,7 @@ namespace EliteJournalReader.Tests
             await WaitForCondition(() => receivedSystems.Count >= 8, timeout: 5000);
 
             // All 8 systems received in order, no duplicates from reset
-            Assert.AreEqual(8, receivedSystems.Count, "All records dispatched exactly once without reset");
+            Assert.HasCount(8, receivedSystems, "All records dispatched exactly once without reset");
             for (int i = 0; i < 8; i++)
             {
                 Assert.AreEqual($"System{i}", receivedSystems[i], $"Record {i} in correct order");
@@ -335,7 +335,7 @@ namespace EliteJournalReader.Tests
             await WaitForCondition(() => receivedSystems.Contains("Replacement"), timeout: 5000);
 
             // The replacement content should be dispatched
-            Assert.IsTrue(receivedSystems.Contains("Replacement"),
+            Assert.Contains("Replacement", receivedSystems,
                 "Identity change must trigger reset and dispatch replacement content");
 
             await watcher.StopWatchingAsync();

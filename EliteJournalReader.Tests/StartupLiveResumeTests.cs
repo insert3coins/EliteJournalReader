@@ -29,7 +29,7 @@ namespace EliteJournalReader.Tests
             var probe = new ResumeScenario("🚀-核心星", 0, 1);
             byte[] recordBytes = probe.RecordBytes;
             int split = Array.FindIndex(recordBytes, value => (value & 0xC0) == 0x80);
-            Assert.IsTrue(split > 0, "The deterministic case must split inside a UTF-8 sequence.");
+            Assert.IsGreaterThan(0, split, "The deterministic case must split inside a UTF-8 sequence.");
 
             var scenario = new ResumeScenario(probe.Utf8Value, probe.Padding, split);
             Assert.IsTrue(await ObserveResumeAsync(scenario), scenario.ToString());
