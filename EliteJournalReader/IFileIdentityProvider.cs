@@ -10,12 +10,12 @@ namespace EliteJournalReader
     public readonly struct FileIdentity : IEquatable<FileIdentity>
     {
         /// <summary>
-        /// Volume serial number (Windows) or device ID (metadata fallback).
+        /// Volume serial number (Windows), device ID (Linux), or creation-time metadata fallback.
         /// </summary>
         public long VolumeId { get; }
 
         /// <summary>
-        /// File index on the volume (Windows) or a composite of creation time + path hash (metadata fallback).
+        /// File index on the volume (Windows), inode (Linux), or a composite of creation time + path hash.
         /// </summary>
         public long FileId { get; }
 
@@ -40,11 +40,12 @@ namespace EliteJournalReader
     /// On Windows, use GetFileInformationByHandle to obtain VolumeSerialNumber + FileIndex for a stable
     /// identity that survives renames but changes when a file is deleted and recreated at the same path.
     /// 
-    /// On unsupported platforms (or as a documented fallback), use file metadata:
-    /// creation time combined with the file path hash provides a reasonable approximation.
-    /// The metadata fallback may produce false positives on systems that don't preserve creation time
-    /// accurately, but for the journal watcher use case (detecting truncation/replacement) it is sufficient
-    /// because a replaced file will almost always have a different creation time.
+    /// On Linux, use the filesystem device and inode from stat(2). On other unsupported platforms,
+    /// use file metadata: creation time combined with the file path hash provides a reasonable
+    /// approximation. The metadata fallback may produce false positives on systems that don't
+    /// preserve creation time accurately, but for the journal watcher use case (detecting
+    /// truncation/replacement) it is sufficient because a replaced file will almost always have a
+    /// different creation time.
     /// </summary>
     public interface IFileIdentityProvider
     {

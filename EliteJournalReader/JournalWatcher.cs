@@ -117,7 +117,8 @@ namespace EliteJournalReader
         /// <summary>
         /// Injectable file-identity provider for detecting truncation or in-place replacement.
         /// On Windows uses GetFileInformationByHandle for volume/file identity.
-        /// Falls back to metadata-based identity on unsupported platforms.
+        /// On Linux uses filesystem device/inode identity; other unsupported platforms use
+        /// metadata-based identity.
         /// </summary>
         private IFileIdentityProvider _fileIdentityProvider;
 
@@ -532,8 +533,7 @@ namespace EliteJournalReader
             }
 
             var token = cancellationTokenSource.Token;
-            _directoryDiscoveryTask = Task.Run(async () =>
-            {
+            _directoryDiscoveryTask = Task.Run(async () => {
                 try
                 {
                     while (true)
@@ -692,8 +692,7 @@ namespace EliteJournalReader
                 return;
 
             var token = cancellationTokenSource.Token;
-            _signalProcessorTask = Task.Run(async () =>
-            {
+            _signalProcessorTask = Task.Run(async () => {
                 while (!token.IsCancellationRequested)
                 {
                     try

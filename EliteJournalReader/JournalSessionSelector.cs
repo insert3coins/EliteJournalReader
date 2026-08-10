@@ -111,7 +111,7 @@ namespace EliteJournalReader
         /// </summary>
         internal static ParsedJournalFile? TryParse(string fullPath)
         {
-            string filename = Path.GetFileName(fullPath);
+            string filename = GetFilename(fullPath);
             var match = CanonicalPattern.Match(filename);
             if (!match.Success)
                 return null;
@@ -145,6 +145,12 @@ namespace EliteJournalReader
                 session,
                 sessionInstantUtc,
                 partNumber);
+        }
+
+        private static string GetFilename(string path)
+        {
+            int separatorIndex = path.LastIndexOfAny(new[] { '\\', '/' });
+            return separatorIndex >= 0 ? path[(separatorIndex + 1)..] : path;
         }
 
         /// <summary>

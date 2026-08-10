@@ -135,11 +135,15 @@ namespace EliteJournalReader.Tests
             var messageSystems = new ConcurrentQueue<string>();
             var delivered = new TaskCompletionSource<bool>(TaskCreationOptions.RunContinuationsAsynchronously);
             var watcher = new JournalWatcher(directory);
-            watcher.GetEvent<FSDJumpEvent>().Fired += (_, args) =>
+            EventHandler<FSDJumpEvent.FSDJumpEventArgs> typedHandler = (sender, args) =>
             {
+                if (!ReferenceEquals(sender, watcher))
+                    return;
+
                 typedSystems.Enqueue(args.StarSystem);
                 delivered.TrySetResult(true);
             };
+            watcher.GetEvent<FSDJumpEvent>().AddHandler(typedHandler);
             watcher.MessageReceived += (_, args) =>
             {
                 if (!string.Equals(args.EventType, "FSDJump", StringComparison.Ordinal))
@@ -184,6 +188,7 @@ namespace EliteJournalReader.Tests
             }
             finally
             {
+                watcher.GetEvent<FSDJumpEvent>().RemoveHandler(typedHandler);
                 using var stopTimeout = new CancellationTokenSource(TimeSpan.FromSeconds(3));
                 await watcher.StopWatchingAsync(stopTimeout.Token);
                 watcher.Dispose();

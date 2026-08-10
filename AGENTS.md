@@ -6,11 +6,11 @@ The library is published as a NuGet package and is used by EliteG19s (in `../Eli
 
 # Project Structure
 
-| Project | Responsibility |
-|---------|---------------|
-| **EliteJournalReader** | Core library — `JournalWatcher`, `StatusWatcher`, all event types, base classes |
-| **EliteJournalReader.Tests** | MSTest unit tests |
-| **EliteJournalFeedTester** | Console demo application showing library usage |
+| Project                      | Responsibility                                                                  |
+| ---------------------------- | ------------------------------------------------------------------------------- |
+| **EliteJournalReader**       | Core library — `JournalWatcher`, `StatusWatcher`, all event types, base classes |
+| **EliteJournalReader.Tests** | MSTest unit tests                                                               |
+| **EliteJournalFeedTester**   | Console demo application showing library usage                                  |
 
 # Building
 
@@ -44,6 +44,16 @@ dotnet test EliteJournalReader.Tests --filter "Test_DockedEvent"
 
 When testing, only run the relevant test cases — never the full test suite unnecessarily.
 
+# Cross-platform validation
+
+Whenever changing `EliteJournalReader`, also validate the solution in Ubuntu WSL so Linux compilation and test behavior stay covered. Restore inside WSL before building or testing because Windows-generated NuGet assets can contain Windows-only fallback package paths:
+
+```powershell
+wsl.exe -d Ubuntu --cd /mnt/c/Source/Elite/EliteJournalReader -- dotnet restore EliteJournalReader.sln
+wsl.exe -d Ubuntu --cd /mnt/c/Source/Elite/EliteJournalReader -- dotnet build EliteJournalReader.sln -c Release --no-restore
+wsl.exe -d Ubuntu --cd /mnt/c/Source/Elite/EliteJournalReader -- dotnet test EliteJournalReader.Tests/EliteJournalReader.Tests.csproj --no-restore --verbosity normal
+```
+
 # Warnings
 
 We want the library to be without warnings. When warnings occur, try not to use suppression directives unless there is no other option.
@@ -62,15 +72,15 @@ Wrap any debug-only diagnostic `Trace.TraceInformation` calls in `#if DEBUG / #e
 
 # Key Files
 
-| File | Purpose |
-|------|---------|
-| `EliteJournalReader/JournalWatcher.cs` | Core file watcher; auto-discovers all event types via reflection at startup |
-| `EliteJournalReader/StatusWatcher.cs` | Monitors `Status*.json` for real-time player status |
-| `EliteJournalReader/JournalEvent.cs` | Abstract base classes `JournalEvent` and `JournalEvent<TArgs>` |
-| `EliteJournalReader/JournalEventArgs.cs` | Base event args; provides `PostProcess`, `Clone`, `Timestamp`, `OriginalEvent` |
-| `EliteJournalReader/Events/` | One file per event type (200+ events) |
-| `EliteJournalReader.Tests/FakeJournalWatcher.cs` | Test double that fires events from raw JSON strings |
-| `EliteJournalReader.Tests/FakeStatusWatcher.cs` | Test double for status events |
+| File                                             | Purpose                                                                        |
+| ------------------------------------------------ | ------------------------------------------------------------------------------ |
+| `EliteJournalReader/JournalWatcher.cs`           | Core file watcher; auto-discovers all event types via reflection at startup    |
+| `EliteJournalReader/StatusWatcher.cs`            | Monitors `Status*.json` for real-time player status                            |
+| `EliteJournalReader/JournalEvent.cs`             | Abstract base classes `JournalEvent` and `JournalEvent<TArgs>`                 |
+| `EliteJournalReader/JournalEventArgs.cs`         | Base event args; provides `PostProcess`, `Clone`, `Timestamp`, `OriginalEvent` |
+| `EliteJournalReader/Events/`                     | One file per event type (200+ events)                                          |
+| `EliteJournalReader.Tests/FakeJournalWatcher.cs` | Test double that fires events from raw JSON strings                            |
+| `EliteJournalReader.Tests/FakeStatusWatcher.cs`  | Test double for status events                                                  |
 
 # Adding a New Event
 
