@@ -17,6 +17,7 @@ namespace EliteJournalReader.Events
         public class ShipyardEventArgs : JournalEventArgs
         {
             public string StationName { get; set; }
+            public string StationName_Localised { get; set; }
             public long MarketID { get; set; }
             public string StarSystem { get; set; }
         }

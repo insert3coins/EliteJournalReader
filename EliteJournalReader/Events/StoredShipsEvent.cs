@@ -51,6 +51,7 @@ namespace EliteJournalReader.Events
 
             public long MarketID { get; set; }
             public string StationName { get; set; }
+            public string StationName_Localised { get; set; }
             public string StarSystem { get; set; }
             public StoredShip[] ShipsHere { get; set; }
             public StoredShip[] ShipsRemote { get; set; }

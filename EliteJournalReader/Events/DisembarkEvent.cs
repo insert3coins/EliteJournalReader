@@ -17,6 +17,7 @@ namespace EliteJournalReader.Events
             public bool OnStation { get; set; }
             public bool OnPlanet { get; set; }
             public string StationName { get; set; }
+            public string StationName_Localised { get; set; }
             public string StationType { get; set; }
             public long MarketID { get; set; }
         }

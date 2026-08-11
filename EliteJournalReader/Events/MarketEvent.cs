@@ -30,6 +30,7 @@ namespace EliteJournalReader.Events
         public class MarketEventArgs : JournalEventArgs
         {
             public string StationName { get; set; }
+            public string StationName_Localised { get; set; }
             public long MarketID { get; set; }
             public string StarSystem { get; set; }
             public string StationType { get; set; }

@@ -3,11 +3,11 @@
     <TargetFrameworks>net10.0</TargetFrameworks>
     <Version>4.2.5</Version>
     <SignAssembly>false</SignAssembly>
-    <Copyright>Copyright © Maurits Elbers (@MagicMau) 2015-2025. Elite: Dangerous and related
+    <Copyright>Copyright © Maurits Elbers (@MagicMau) 2015-2026. Elite: Dangerous and related
       material is © Frontier Developments plc</Copyright>
     <Company>MagicMau</Company>
     <PackageId>EliteJournalReader</PackageId>
-    <AssemblyVersion>4.2.5.0</AssemblyVersion>
+    <AssemblyVersion>4.4.0.0</AssemblyVersion>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <Authors>MagicMau</Authors>
     <PackageReadmeFile>ReadMe.md</PackageReadmeFile>
