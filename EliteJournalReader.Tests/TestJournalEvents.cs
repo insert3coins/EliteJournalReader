@@ -92,21 +92,23 @@ namespace EliteJournalReader.Tests
         [TestMethod]
         public void Test_LocationEvent()
         {
-            var returned = watcher.FireFakeEventAndReturn(@"{ ""timestamp"":""2017-09-25T12:00:00Z"", ""event"":""Location"", ""StarSystem"":""Shinrarta Dezhra"", ""SystemAddress"":3932277478106, ""StarPos"":[55.719,17.594,27.156], ""Body"":""Shinrarta Dezhra A"", ""BodyID"":1, ""BodyType"":""Star"", ""Docked"":true, ""StationName"":""Jameson Memorial"", ""StationType"":""Orbis"", ""MarketID"":128666762, ""SystemAllegiance"":""Independent"", ""SystemEconomy"":""$economy_HighTech;"", ""SystemEconomy_Localised"":""High Tech"", ""SystemGovernment"":""$government_Democracy;"", ""SystemGovernment_Localised"":""Democracy"", ""SystemSecurity"":""$SYSTEM_SECURITY_high;"", ""SystemSecurity_Localised"":""High Security"", ""Population"":85206935 }");
+            var returned = watcher.FireFakeEventAndReturn(@"{ ""timestamp"":""2017-09-25T12:00:00Z"", ""event"":""Location"", ""StarSystem"":""Shinrarta Dezhra"", ""SystemAddress"":3932277478106, ""StarPos"":[55.719,17.594,27.156], ""Body"":""Shinrarta Dezhra A"", ""BodyID"":1, ""BodyType"":""Star"", ""Docked"":true, ""StationName"":""Jameson Memorial"", ""StationName_Localised"":""Jameson Memorial Localized"", ""StationType"":""Orbis"", ""MarketID"":128666762, ""SystemAllegiance"":""Independent"", ""SystemEconomy"":""$economy_HighTech;"", ""SystemEconomy_Localised"":""High Tech"", ""SystemGovernment"":""$government_Democracy;"", ""SystemGovernment_Localised"":""Democracy"", ""SystemSecurity"":""$SYSTEM_SECURITY_high;"", ""SystemSecurity_Localised"":""High Security"", ""Population"":85206935 }");
             var location = returned as LocationEvent.LocationEventArgs;
             Assert.IsNotNull(location);
             Assert.AreEqual("Shinrarta Dezhra", location.StarSystem);
             Assert.IsTrue(location.Docked);
             Assert.AreEqual("Jameson Memorial", location.StationName);
+            Assert.AreEqual("Jameson Memorial Localized", location.StationName_Localised);
         }
 
         [TestMethod]
         public void Test_DockedEvent()
         {
-            var returned = watcher.FireFakeEventAndReturn(@"{ ""timestamp"":""2017-10-02T10:37:58Z"", ""event"":""Docked"", ""StationName"":""Jameson Memorial"", ""StationType"":""Orbis"", ""StarSystem"":""Shinrarta Dezhra"", ""SystemAddress"":3932277478106, ""MarketID"":128666762, ""StationFaction"":{ ""Name"":""The Pilots Federation"" }, ""StationGovernment"":""$government_Democracy;"", ""StationGovernment_Localised"":""Democracy"", ""StationAllegiance"":""PilotsFederation"", ""StationServices"":[""dock"",""autodock"",""commodities"",""contacts""], ""StationEconomy"":""$economy_HighTech;"", ""StationEconomy_Localised"":""High Tech"", ""DistFromStarLS"":325.1 }");
+            var returned = watcher.FireFakeEventAndReturn(@"{ ""timestamp"":""2017-10-02T10:37:58Z"", ""event"":""Docked"", ""StationName"":""Jameson Memorial"", ""StationName_Localised"":""Jameson Memorial Localized"", ""StationType"":""Orbis"", ""StarSystem"":""Shinrarta Dezhra"", ""SystemAddress"":3932277478106, ""MarketID"":128666762, ""StationFaction"":{ ""Name"":""The Pilots Federation"" }, ""StationGovernment"":""$government_Democracy;"", ""StationGovernment_Localised"":""Democracy"", ""StationAllegiance"":""PilotsFederation"", ""StationServices"":[""dock"",""autodock"",""commodities"",""contacts""], ""StationEconomy"":""$economy_HighTech;"", ""StationEconomy_Localised"":""High Tech"", ""DistFromStarLS"":325.1 }");
             var docked = returned as DockedEvent.DockedEventArgs;
             Assert.IsNotNull(docked);
             Assert.AreEqual("Jameson Memorial", docked.StationName);
+            Assert.AreEqual("Jameson Memorial Localized", docked.StationName_Localised);
             Assert.AreEqual("Shinrarta Dezhra", docked.StarSystem);
             Assert.AreEqual("Orbis", docked.StationType);
         }
@@ -136,14 +138,36 @@ namespace EliteJournalReader.Tests
         [TestMethod]
         public void Test_CarrierJumpEvent()
         {
-            var returned = watcher.FireFakeEventAndReturn(@"{ ""timestamp"":""2025-03-19T19:03:12Z"", ""event"":""CarrierJump"", ""Docked"":true, ""StationName"":""V1B-WQB"", ""StationType"":""FleetCarrier"", ""MarketID"":3705689344, ""StarSystem"":""HR 3635"", ""SystemAddress"":1694121347427, ""StarPos"":[64.0625,75.34375,-79.59375], ""SystemAllegiance"":""Alliance"", ""Taxi"":false, ""Multicrew"":false, ""Factions"":[{""Name"":""Flat Galaxy Society"",""FactionState"":""None"",""Government"":""Democracy"",""Influence"":0.698712,""Allegiance"":""Alliance"",""Happiness"":""$Faction_HappinessBand2;"",""Happiness_Localised"":""Happy"",""MyReputation"":100.0}] }");
+            var returned = watcher.FireFakeEventAndReturn(@"{ ""timestamp"":""2025-03-19T19:03:12Z"", ""event"":""CarrierJump"", ""Docked"":true, ""StationName"":""V1B-WQB"", ""StationName_Localised"":""Carrier Localized"", ""StationType"":""FleetCarrier"", ""MarketID"":3705689344, ""StarSystem"":""HR 3635"", ""SystemAddress"":1694121347427, ""StarPos"":[64.0625,75.34375,-79.59375], ""SystemAllegiance"":""Alliance"", ""Taxi"":false, ""Multicrew"":false, ""Factions"":[{""Name"":""Flat Galaxy Society"",""FactionState"":""None"",""Government"":""Democracy"",""Influence"":0.698712,""Allegiance"":""Alliance"",""Happiness"":""$Faction_HappinessBand2;"",""Happiness_Localised"":""Happy"",""MyReputation"":100.0}] }");
             var carrierJump = returned as CarrierJumpEvent.CarrierJumpEventArgs;
             Assert.IsNotNull(carrierJump);
             Assert.AreEqual("HR 3635", carrierJump.StarSystem);
             Assert.IsTrue(carrierJump.Docked);
             Assert.AreEqual("V1B-WQB", carrierJump.StationName);
+            Assert.AreEqual("Carrier Localized", carrierJump.StationName_Localised);
             Assert.HasCount(1, carrierJump.Factions);
             Assert.AreEqual("Flat Galaxy Society", carrierJump.Factions[0].Name);
+        }
+
+        [TestMethod]
+        public void Test_StationNamePropertiesHaveLocalizedCompanions()
+        {
+            var stationNameArgsTypes = typeof(JournalEvent).Assembly.GetTypes()
+                .Where(type => typeof(JournalEventArgs).IsAssignableFrom(type) && !type.IsAbstract)
+                .Where(type => type.GetProperty("StationName", BindingFlags.Public | BindingFlags.Instance) != null)
+                .ToList();
+
+            Assert.IsNotEmpty(stationNameArgsTypes);
+
+            foreach (var type in stationNameArgsTypes)
+            {
+                var stationNameProperty = type.GetProperty("StationName", BindingFlags.Public | BindingFlags.Instance);
+                var localizedProperty = type.GetProperty("StationName_Localised", BindingFlags.Public | BindingFlags.Instance);
+
+                Assert.AreEqual(typeof(string), stationNameProperty.PropertyType, $"{type.FullName}.StationName must be a string.");
+                Assert.IsNotNull(localizedProperty, $"{type.FullName} is missing StationName_Localised.");
+                Assert.AreEqual(typeof(string), localizedProperty.PropertyType, $"{type.FullName}.StationName_Localised must be a string.");
+            }
         }
 
         [TestMethod]
