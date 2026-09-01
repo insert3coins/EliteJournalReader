@@ -11,7 +11,7 @@ namespace EliteJournalReader
     /// and pending UTF-8 bytes that have not yet been terminated by a newline.
     /// Only dispatches complete newline-terminated records and never commits partial data.
     /// </summary>
-    internal sealed class JournalRecordFramer
+    public sealed class JournalRecordFramer
     {
         private const int ReadBufferSize = 4096;
         private const byte LF = (byte)'\n';

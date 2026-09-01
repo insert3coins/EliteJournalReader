@@ -82,15 +82,15 @@ namespace EliteJournalReader
         /// </summary>
         private Task _signalProcessorTask;
 
-        internal const int DIRECTORY_DISCOVERY_INTERVAL_MILLISECONDS = 5000;
+        public const int DIRECTORY_DISCOVERY_INTERVAL_MILLISECONDS = 5000;
 
-        internal bool IsDirectoryDiscoveryActive =>
+        public bool IsDirectoryDiscoveryActive =>
             _directoryDiscoveryTask != null && !_directoryDiscoveryTask.IsCompleted;
 
-        internal bool IsSignalProcessorActive =>
+        public bool IsSignalProcessorActive =>
             _signalProcessorTask != null && !_signalProcessorTask.IsCompleted;
 
-        internal bool IsSelectedFilePollingActive =>
+        public bool IsSelectedFilePollingActive =>
             _readerTask != null && !_readerTask.IsCompleted;
 
         /// <summary>

@@ -20,7 +20,7 @@ namespace EliteJournalReader
     /// 5. When no canonical files exist, fall back to exactly one legacy file by last-write UTC,
     ///    then normalized filename ordinal. Never mix legacy and canonical files.
     /// </summary>
-    internal sealed class JournalSessionSelector
+    public sealed class JournalSessionSelector
     {
         /// <summary>
         /// Matches canonical journal filenames:
@@ -46,7 +46,7 @@ namespace EliteJournalReader
         /// <summary>
         /// Represents a parsed canonical journal filename.
         /// </summary>
-        internal readonly struct ParsedJournalFile : IComparable<ParsedJournalFile>
+        public readonly struct ParsedJournalFile : IComparable<ParsedJournalFile>
         {
             public string FullPath { get; }
             public string Filename { get; }
@@ -109,7 +109,7 @@ namespace EliteJournalReader
         /// Returns null if the filename does not match the canonical pattern or contains
         /// an invalid compact/ISO UTC session timestamp.
         /// </summary>
-        internal static ParsedJournalFile? TryParse(string fullPath)
+        public static ParsedJournalFile? TryParse(string fullPath)
         {
             string filename = GetFilename(fullPath);
             var match = CanonicalPattern.Match(filename);

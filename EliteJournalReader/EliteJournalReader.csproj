@@ -41,7 +41,7 @@
   <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
   </ItemGroup>
-  <ItemGroup>
+  <ItemGroup Condition="'$(Configuration)' == 'Debug' Or '$(Configuration)' == 'Debug local'">
     <InternalsVisibleTo Include="EliteJournalReader.Tests" />
   </ItemGroup>
   <ItemGroup>
