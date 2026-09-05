@@ -125,6 +125,26 @@ namespace EliteJournalReader.Tests
         }
 
         [TestMethod]
+        public void Test_GameModeChangeEvent()
+        {
+            var returned = watcher.FireFakeEventAndReturn(@"{ ""timestamp"":""2026-09-02T11:37:37Z"", ""event"":""GameModeChange"", ""GameMode"":""MainGame"" }");
+            var gameModeChange = returned as GameModeChangeEvent.GameModeChangeEventArgs;
+
+            Assert.IsNotNull(gameModeChange);
+            Assert.AreEqual("MainGame", gameModeChange.GameMode);
+        }
+
+        [TestMethod]
+        public void Test_GameModeChangeEvent_PreservesUnknownValue()
+        {
+            var returned = watcher.FireFakeEventAndReturn(@"{ ""timestamp"":""2026-09-02T11:37:37Z"", ""event"":""GameModeChange"", ""GameMode"":""FutureLifecycleMode_9000"" }");
+            var gameModeChange = returned as GameModeChangeEvent.GameModeChangeEventArgs;
+
+            Assert.IsNotNull(gameModeChange);
+            Assert.AreEqual("FutureLifecycleMode_9000", gameModeChange.GameMode);
+        }
+
+        [TestMethod]
         public void Test_LaunchVesselEvent()
         {
             var returned = watcher.FireFakeEventAndReturn(@"{ ""timestamp"":""2026-09-02T11:49:38Z"", ""event"":""LaunchVessel"", ""VesselType"":""lander01"", ""VesselType_Localised"":""Nomad"", ""Loadout"":""base"", ""ID"":98, ""PlayerControlled"":true }");
