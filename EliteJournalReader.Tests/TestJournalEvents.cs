@@ -125,6 +125,20 @@ namespace EliteJournalReader.Tests
         }
 
         [TestMethod]
+        public void Test_LaunchVesselEvent()
+        {
+            var returned = watcher.FireFakeEventAndReturn(@"{ ""timestamp"":""2026-09-02T11:49:38Z"", ""event"":""LaunchVessel"", ""VesselType"":""lander01"", ""VesselType_Localised"":""Nomad"", ""Loadout"":""base"", ""ID"":98, ""PlayerControlled"":true }");
+            var launchVessel = returned as LaunchVesselEvent.LaunchVesselEventArgs;
+
+            Assert.IsNotNull(launchVessel);
+            Assert.AreEqual("lander01", launchVessel.VesselType);
+            Assert.AreEqual("Nomad", launchVessel.VesselType_Localised);
+            Assert.AreEqual("base", launchVessel.Loadout);
+            Assert.AreEqual(98L, launchVessel.ID);
+            Assert.IsTrue(launchVessel.PlayerControlled);
+        }
+
+        [TestMethod]
         public void Test_BountyEvent()
         {
             var returned = watcher.FireFakeEventAndReturn(@"{ ""timestamp"":""2017-10-02T10:45:00Z"", ""event"":""Bounty"", ""Rewards"":[ { ""Faction"":""Eranin People's Party"", ""Reward"":2415 } ], ""Target"":""Sidewinder"", ""TotalReward"":2415, ""VictimFaction"":""Eranin People's Party"" }");
